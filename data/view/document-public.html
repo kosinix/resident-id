@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{app.description}}">
+    <title>{{app.title}}</title>
+
+    <!-- Bootstrap -->
+    <link rel="shortcut icon" href="{{app.url}}/favicon.png" />
+    <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{app.url}}/css/style.css" />
+</head>
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-4 mr-0 px-3" href="/">Buenavista Resident ID System</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="#">Sign In</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        {% block body %}{% endblock %}
+
+    </div>
+</div>
+{% block scripts %}
+<script src="{{app.url}}/js/jquery-3.3.1.min.js"></script>
+<script src="{{app.url}}/js/popper.min.js"></script>
+<script src="{{app.url}}/js/bootstrap.min.js"></script>
+<script src="{{app.url}}/js/lodash.min.js"></script>
+<script src="{{app.url}}/js/moment.min.js"></script>
+<script src="{{app.url}}/js/axios.min.js"></script>
+<script src="{{app.url}}/js/vue.js"></script>
+{% endblock %}
+</html>

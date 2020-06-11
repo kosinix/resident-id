@@ -1,0 +1,50 @@
+{% extends "document-public.html" %}
+
+{% block body %}
+<div class="container container-first height-medium">
+    <div class="row">
+        <div class="col-md-4 ml-auto mr-auto">
+            <h1 class="ec-header-4 text-center">Login</h1>
+            <div id="vLogin" v-cloak>
+                {% include 'parts/flash.html' %}
+                <form ref="form" v-on:submit.prevent="onSubmit" action="/login" method="POST" novalidate>
+                    <div class="form-group">
+                        <input v-model="email" type="email" name="email" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        <input v-model="password" type="password" name="password" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-full-width">Login</button>
+                    </div>
+                    <small class="note">Logging in from IP Address: {{ip}}</small>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+var vLogin = new Vue({
+    el: '#vLogin',
+    delimiters: ["${", "}"],
+    data:{
+        disabled: false,
+        email:"",
+        password:"",
+        errorMessage: ""
+    },
+    methods: {
+        onSubmit: function(){
+            var me = this;
+            me.$nextTick(function() {
+                me.$refs.form.submit();
+            });
+           
+        }
+    }
+});
+</script>
+{% endblock %}

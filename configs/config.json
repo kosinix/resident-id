@@ -1,0 +1,74 @@
+{
+  "app": {
+    "port": "9092",
+    "url": "http://localhost:9092",
+    "dir": "${APP_DIR}",
+    "dirs": {
+      "data": "${APP_DIR}/data",
+      "src": "${APP_DIR}/src",
+      "public": "${APP_DIR}/data/public",
+      "view": "${APP_DIR}/data/view",
+      "upload": "${APP_DIR}/data/upload"
+    }
+  },
+  "express": {
+    "trustProxy": false
+  },
+  "nunjucks": {
+    "loader": {
+      "watch": true,
+      "noCache": true
+    },
+    "environment": {
+      "autoescape": true,
+      "throwOnUndefined": false,
+      "trimBlocks": false,
+      "lstripBlocks": false
+    }
+  },
+  "session": {
+    "name": "resident.app.sid",
+    "store": {
+      "db": "sessions.db",
+      "dir": "${APP_DIR}/data"
+    },
+    "cookie": {
+      "httpOnly": false,
+      "maxAge": 31536000000,
+      "secure": false
+    }
+  },
+  "mongodb": {
+    "connections": {
+      "admin": {
+        "host": "127.0.0.1:27017",
+        "db": "admin"
+      },
+      "main": {
+        "host": "127.0.0.1:27017",
+        "db": "resident",
+        "options": {
+          "useCreateIndex": true,
+          "useNewUrlParser": true,
+          "useUnifiedTopology": true
+        }
+      }
+    }
+  },
+  "aws": {
+    "region": "ap-southeast-1",
+    "bucket1": {
+      "name": "guimaras-storage",
+      "url": "https://guimaras-storage.s3-ap-southeast-1.amazonaws.com/docs-sandbox/",
+      "prefix": "client-docs-sandbox"
+    }
+  },
+  "ipCheck": false,
+  "ip": {
+    "allowed": [
+      "::1"
+    ]
+  },
+  "minPasswordLength": 8,
+  "minSaltLength": 8
+}

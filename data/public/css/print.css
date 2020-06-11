@@ -1,0 +1,117 @@
+/* See https://stackoverflow.com/questions/49785039/printing-bootstrap-4-html-page-in-chrome-cuts-off-chrome-header-footers */
+@page {
+    size: auto;
+}
+
+body {
+    padding: 25px 0;
+    background: none;
+}
+
+body, pre {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+img {
+    max-width: 100%;
+}
+
+.paper .profile {
+    border:1px solid #ccc;
+    height: 5cm;
+    width: 5cm;
+    position: relative;
+    overflow: hidden;
+}
+.paper .profile img {
+    max-width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.paper h1 {
+    font-size: 26px;
+}
+
+.paper h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.paper p {
+    margin-bottom: 10px;
+}
+
+.paper > .row {
+    margin-bottom: 25px;
+}
+.paper .row .row {
+    margin-bottom: 10px;
+}
+
+.col-1 > p:first-child,
+.col-2 > p:first-child,
+.col-3 > p:first-child,
+.col-4 > p:first-child,
+.col-5 > p:first-child,
+.col-6 > p:first-child,
+.col-7 > p:first-child,
+.col-8 > p:first-child,
+.col-9 > p:first-child,
+.col-10 > p:first-child,
+.col-11 > p:first-child,
+.col-12 > p:first-child {
+    font-size: 14px;
+}
+
+.pagebreak { page-break-before: always; } /* page-break-after works, as well */
+
+.terms h2 {
+    margin-bottom: 0;
+}
+.terms p {
+    margin-bottom: 15;
+}
+.terms p.small {
+    margin-bottom: 5;
+}
+
+span.blank {
+    display: inline-block;
+    min-width: 200px;
+    border-top: 1px solid #1a1a1a;
+}
+
+/* Underwriting page */
+.table-underwrite {
+    width: 100%;
+    font-size: 12px;
+    color: #222;
+    border: 1px solid #222;
+    margin-bottom: 10px;
+}
+.table-underwrite td.col-minimal{
+    width: 150px
+}
+.table-underwrite input,
+.table-underwrite textarea {
+    border: 0;
+    width: 100%;
+}
+.table-underwrite input.form-control-underline {
+    border-bottom: 1px solid #ccc;
+}
+.table-underwrite td{
+    border: 1px solid #222;
+    padding: 1px 10px;
+    vertical-align: top;
+}
+.table-underwrite td.dark{
+    background: #eee;
+}
+.table-underwrite pre {
+    color: #222;
+    font-size: 12px;
+    border: 0;
+}
