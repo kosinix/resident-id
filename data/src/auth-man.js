@@ -10,18 +10,15 @@ const lodash = require('lodash');
 //// Modules
 const db = require('./db');
 
-// Allowed routes for authMan.redirect
-let allowed = [
-    '/profile'
-];
+let sessionDataPath = 'authMan.userSessionData'
 
 /**
  * Use the data that was saved in session to reconstruct the actual user
- * @param {*} userSessionData
+ * @param {session} Containing session
  */
-const deserializeUserAsync = async (req) => {
+const deserializeUserAsync = async (session) => {
     try {
-        let userSessionData = lodash.get(req, 'session.authMan.userSessionData');
+        let userSessionData = lodash.get(session, 'authMan.userSessionData');
         if (!userSessionData) {
             return null
         }
@@ -36,18 +33,6 @@ const deserializeUserAsync = async (req) => {
         return null;
     }
 };
-
-/**
- *  Get redirect path/url of an allowed path/url if there is any. If none return default
- */
-const getRedirect = (req) => {
-    let redirect = lodash.get(req, 'session.authMan.redirect', '');
-    if (allowed.includes(redirect)) {
-        lodash.set(req.session, 'authMan.redirect', '');
-        return redirect;
-    }
-    return '/account';
-}
 
 // Logout
 const logout = (req, res) => {
@@ -74,7 +59,7 @@ module.exports = {
     // Adds res.user
     getUser: async (req, res, next) => {
         try {
-            let user = await deserializeUserAsync(req);
+            let user = await deserializeUserAsync(req.session);
 
             if (!user) {
                 return res.redirect('/login')
@@ -87,7 +72,6 @@ module.exports = {
         }
     },
     deserializeUserAsync: deserializeUserAsync,
-    getRedirect: getRedirect,
     logout: logout,
     serializeUser: serializeUser,
 }

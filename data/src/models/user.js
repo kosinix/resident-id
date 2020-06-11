@@ -1,12 +1,9 @@
 //// Core modules
-const crypto = require('crypto');
-const util = require('util');
 
 //// External modules
 const mongoose = require('mongoose');
 
 //// Modules
-let randomBytesAsync = util.promisify(crypto.randomBytes);
 
 let schema = mongoose.Schema({
     firstName: {
@@ -59,13 +56,7 @@ schema.methods.isRoles = function (requiredRoles) {
 }
 
 //// Static methods
-schema.statics.randomStringAsync = async function (length = 32) {
-    let salt = await randomBytesAsync(length / 2);
-    return salt.toString('hex');
-}
-schema.statics.hashPassword = function (password, salt) {
-    return crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64');
-};
+
 
 
 //// Middlewares

@@ -10,15 +10,26 @@ const lodash = require('lodash')
 const moment = require('moment')
 
 //// Modules
-const authMan = require('../auth-man');
+const middlewares = require('../middlewares');
 const s3 = require('../aws-s3');
 
 // Router
 let router = express.Router()
 
-router.get('/', async (req, res, next) => {
+router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
     try {
+        console.log(req.session)
+
         res.render('home.html');
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/residents', middlewares.requireAuthUser, async (req, res, next) => {
+    try {
+
+        res.render('residents/all.html');
     } catch (err) {
         next(err);
     }

@@ -3,16 +3,18 @@
 {% block body %}
 <div class="container container-first height-medium">
     <div class="row">
-        <div class="col-md-4 ml-auto mr-auto">
-            <h1 class="ec-header-4 text-center">Login</h1>
-            <div id="vLogin" v-cloak>
+        <div class="col-md-4 ml-auto mr-auto pt-5">
+            <h1 class="text-center">Login</h1>
+            <div id="vApp" v-cloak>
                 {% include 'parts/flash.html' %}
                 <form ref="form" v-on:submit.prevent="onSubmit" action="/login" method="POST" novalidate>
                     <div class="form-group">
                         <input v-model="email" type="email" name="email" class="form-control" value="">
+                        <small class="invalid-feedback">${getError('email')}</small>
                     </div>
                     <div class="form-group">
                         <input v-model="password" type="password" name="password" class="form-control" value="">
+                        <small class="invalid-feedback">${getError('password')}</small>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary btn-full-width">Login</button>
@@ -27,24 +29,38 @@
 {% block scripts %}
 {{ super() }}
 <script>
-var vLogin = new Vue({
-    el: '#vLogin',
-    delimiters: ["${", "}"],
-    data:{
-        disabled: false,
-        email:"",
-        password:"",
-        errorMessage: ""
-    },
-    methods: {
-        onSubmit: function(){
-            var me = this;
-            me.$nextTick(function() {
-                me.$refs.form.submit();
-            });
-           
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vuelidate.validationMixin,
+            window.vuelidateExtendMixin,
+        ],
+        data: {
+            email: '',
+            password: '',
+        },
+        validations: {
+            email: {
+                required: window.validators.required
+            },
+            password: {
+                required: window.validators.required
+            },
+        },
+        methods: {
+            onSubmit: function(){
+                var me = this;
+                me.$v.$touch()
+                if (me.$v.$error) {
+                    alert('Please correct the errors to continue.')
+                } else {
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                }
+            }
         }
-    }
-});
+    });
 </script>
 {% endblock %}

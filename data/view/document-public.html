@@ -19,25 +19,20 @@
     </button>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="#">Sign In</a>
+            <a class="nav-link" href="/login">Sign In</a>
         </li>
     </ul>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-
         {% block body %}{% endblock %}
-
     </div>
 </div>
 {% block scripts %}
-<script src="{{app.url}}/js/jquery-3.3.1.min.js"></script>
-<script src="{{app.url}}/js/popper.min.js"></script>
-<script src="{{app.url}}/js/bootstrap.min.js"></script>
-<script src="{{app.url}}/js/lodash.min.js"></script>
-<script src="{{app.url}}/js/moment.min.js"></script>
-<script src="{{app.url}}/js/axios.min.js"></script>
 <script src="{{app.url}}/js/vue.js"></script>
+<script src="{{app.url}}/js/vuelidate.min.js"></script>
+<script src="{{app.url}}/js/validators.min.js"></script>
+<script src="{{app.url}}/js/vuelidate-extend.js"></script>
 {% endblock %}
 </html>

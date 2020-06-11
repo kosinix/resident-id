@@ -109,3 +109,20 @@ body, pre {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
+
+
+/* Bootstrap Overrides */
+.btn-full-width {
+    width: 100%;
+}
+
+/*  Validation  */
+.form-set.is-invalid .invalid-feedback {
+    display: block;
+}
+.form-set.is-invalid label {
+    color:  red;
+}
+.invalid-feedback {
+    display: block; /* Always show */
+}
