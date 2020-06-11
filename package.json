@@ -1,0 +1,20 @@
+{
+  "name": "resident-id",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosinix/resident-id.git"
+  },
+  "keywords": [],
+  "author": "Nico Amarilla",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kosinix/resident-id/issues"
+  },
+  "homepage": "https://github.com/kosinix/resident-id#readme"
+}
