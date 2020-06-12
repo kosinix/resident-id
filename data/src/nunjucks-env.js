@@ -34,8 +34,14 @@ env.addFilter('htmlDecode', (value) => {
 });
 
 env.addFilter('activeClass', (value, match, activeClass = 'active') => {
-    if(value === match){
-        return activeClass
+    if(Array.isArray(match)){
+        if(match.includes(value)){
+            return activeClass
+        }
+    } else {
+        if(value === match){
+            return activeClass
+        }
     }
     return ''
 });
@@ -139,6 +145,10 @@ env.addFilter('replace', (str, replacee, replacer) => {
  */
 env.addFilter('capitalize', (str) => {
     return lodash.capitalize(str);
+});
+
+env.addFilter('startCase', (str) => {
+    return lodash.startCase(str);
 });
 
 /**
