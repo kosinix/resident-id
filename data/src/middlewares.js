@@ -82,13 +82,10 @@ let requireAuthUser = async (req, res, next) => {
     try {
         let authUserId = lodash.get(req, 'session.authUserId');
         if (!authUserId) {
-            console.log('None')
             return res.redirect('/login')
         }
         let user = await db.main.User.findById(authUserId);
         if (!user) {
-            console.log('None2')
-
             return res.redirect('/login')
         }
         res.user = user;
