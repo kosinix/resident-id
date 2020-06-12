@@ -16,7 +16,6 @@ const routes = require('./routes');
 const session = require('./session');
 
 
-
 //// Create app
 const app = express();
 
@@ -44,19 +43,6 @@ app.use(session);
 // Static public files
 app.use(express.static(CONFIG.app.dirs.public));
 
-// Body class
-app.use((req, res, next) => {
-    // CONFIG.app.url = 'http://'+req.get('host') // TODO: remove for mobile tether testing
-    // If path "/about-us" becomes "page-about-us"
-    let bodyClass = 'page' + (req.baseUrl + req.path).replace(/\//g, '-');
-    bodyClass = lodash.trim(bodyClass, '-');
-    bodyClass = lodash.trimEnd(bodyClass, '.html');
-    req.app.locals.bodyClass = bodyClass; // global body class css
-
-    req.app.locals.acsrf = lodash.get(req, 'session.acsrf');
-    next();
-});
-
 // Parse http body
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -74,7 +60,26 @@ app.set('trust proxy', CONFIG.express.trustProxy);
 //// Assign view variables per request
 app.use(async (req, res, next) => {
     try {
-        res.locals.user = await authMan.deserializeUserAsync(req); // Available in all template view files
+        res.locals.user = null
+        let authUserId = lodash.get(req, 'session.authUserId');
+        if (authUserId) {
+            let user = await db.main.User.findById(authUserId)
+            user = lodash.pickBy(user.toObject(), (_, key) => {
+                return !['createdAt', 'updatedAt', '__v', 'passwordHash', 'salt'].includes(key) // Remove these props
+            })
+            res.locals.user = user
+        }
+
+        res.locals.acsrf = lodash.get(req, 'session.acsrf');
+
+        res.locals.urlPath = req.path
+
+        let bodyClass = 'page' + (req.baseUrl + req.path).replace(/\//g, '-');
+        bodyClass = lodash.trim(bodyClass, '-');
+        bodyClass = lodash.trimEnd(bodyClass, '.html');
+        res.locals.bodyClass = bodyClass; // global body class css
+
+        console.log(res.locals)
         next();
     } catch (error) {
         next(error);
@@ -109,7 +114,7 @@ app.use(function (error, req, res, next) {
         }
 
         // Anything that is not catched
-        res.status(500).render('error.html', { error: error.message });
+        res.status(500).render('error.html', {error: error.message});
     } catch (err) {
         // If an error handler had an error!! 
         error = errors.normalizeError(err);

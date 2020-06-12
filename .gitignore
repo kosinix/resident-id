@@ -109,3 +109,5 @@ dist
 credentials/*
 
 package-lock.json
+
+data/sessions.db

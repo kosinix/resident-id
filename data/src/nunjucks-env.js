@@ -33,6 +33,13 @@ env.addFilter('htmlDecode', (value) => {
     return htmlEnDec.decode(value)
 });
 
+env.addFilter('activeClass', (value, match, activeClass = 'active') => {
+    if(value === match){
+        return activeClass
+    }
+    return ''
+});
+
 
 // Custom filters
 // Usage {{ value | currency }}
