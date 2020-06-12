@@ -79,7 +79,6 @@ app.use(async (req, res, next) => {
         bodyClass = lodash.trimEnd(bodyClass, '.html');
         res.locals.bodyClass = bodyClass; // global body class css
 
-        console.log(res.locals)
         next();
     } catch (error) {
         next(error);
