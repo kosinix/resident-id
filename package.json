@@ -1,7 +1,7 @@
 {
-  "name": "resident-id",
+  "name": "RIDSYS",
   "version": "1.0.0",
-  "description": "",
+  "description": "Resident ID System",
   "main": "index.js",
   "scripts": {
     "dev": "set NODE_ENV=dev&& nodemon index.js",
