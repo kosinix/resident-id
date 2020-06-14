@@ -99,6 +99,19 @@ let requireAuthUser = async (req, res, next) => {
 module.exports = {
     allowIp: allowIp,
     antiCsrfCheck: antiCsrfCheck,
+    getPerson: async (req, res, next) => {
+        try {
+            let personId = req.params.personId || "";
+            let person = await db.main.Person.findById(personId);
+            if (!person) {
+                return res.render('error.html', { error: "Sorry, person not found." })
+            }
+            res.person = person
+            next();
+        } catch (err) {
+            next(err);
+        }
+    },
     getUser: getUser,
     handleExpressUploadMagic: handleExpressUploadMagic,
     requireAuthUser: requireAuthUser,

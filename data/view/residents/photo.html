@@ -1,0 +1,72 @@
+{% extends "document.html" %}
+
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1>Residents</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="/residents" class="btn btn-sm btn-outline-primary">Back</a>
+            </div>
+        </div>
+    </div>
+    <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/photo/{{person._id}}" method="POST" enctype="multipart/form-data" class="form-default">
+        <h3>Personal Info</h3>
+        {% set name = 'photo' %}
+        {% include 'parts/form-group-file.html' %}
+
+        <div class="form-row pt-3 pb-3">
+            <div class="col-md-12">
+                <button class="btn btn-primary">Update Resident</button>
+            </div>
+        </div>
+    </form>
+</main>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{app.url}}/js/vue-ph-address.js"></script>
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vuelidate.validationMixin,
+            window.vuelidateExtendMixin,
+            window.VuePhAddress.mixin,
+            window.VuePhAddress.mixinRegions,
+            window.VuePhAddress.mixinPresentAddress,
+            window.VuePhAddress.mixinPermanentAddress,
+        ],
+        data: {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            suffix: '',
+            gender: 'male',
+            birthDate: '',
+            region1: '06',
+            province1: '0679',
+            cityMun1: '067901',
+            addressSame: false
+        },
+        validations: {
+
+        },
+        methods: {
+            onSubmit: function(){
+                var me = this;
+                me.$v.$touch()
+                if (me.$v.$error) {
+                    alert('Please correct the errors to continue.')
+                } else {
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+
