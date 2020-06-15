@@ -36,7 +36,7 @@
     "moment": "^2.26.0",
     "mongoose": "^5.9.18",
     "nunjucks": "^3.2.1",
-    "ph-address": "^1.0.0",
+    "ph-address": "^1.2.1",
     "pigura": "^1.0.1",
     "sharp": "^0.25.3",
     "troso": "^2.0.1"

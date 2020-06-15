@@ -129,6 +129,9 @@ h3 {
 h4, h5, h6 {
     font-size: 16px;
 }
+.form-group {
+    margin-bottom: 20px;
+}
 
 /*  Validation  */
 .form-set.is-invalid .invalid-feedback {
@@ -139,4 +142,40 @@ h4, h5, h6 {
 }
 .invalid-feedback {
     display: block; /* Always show */
+}
+
+.profile-photo {
+    border: 1px solid #ccc;
+    border-radius: 100%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    background: #ffffff;
+}
+.profile-photo a {
+    display: inline-block;
+}
+.profile-photo img {
+    max-width: 100%;
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+.profile-photo .initials {
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    font-size: 44px;
+    display: inline-block;
+}
+
+/* Tabs */
+.tab-content {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    margin-top: -1px;
 }

@@ -2,14 +2,9 @@
 
 {% block body %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1>Residents</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-                <a href="/residents" class="btn btn-sm btn-outline-primary">Back</a>
-            </div>
-        </div>
-    </div>
+    {% include 'parts/flash.html' %}
+    {% include 'parts/resident-header.html' %}
+
     <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/photo/{{person._id}}" method="POST" enctype="multipart/form-data" class="form-default">
         {% if person.profilePhoto %}
         <img src="{{person.profilePhoto|s3_url('medium')}}" alt="">
@@ -20,7 +15,7 @@
 
         <div class="form-row pt-3 pb-3">
             <div class="col-md-12">
-                <button class="btn btn-primary">Update Resident</button>
+                <button class="btn btn-primary">Update Profile Photo</button>
             </div>
         </div>
     </form>

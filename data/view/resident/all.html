@@ -28,7 +28,7 @@
                 <tbody>
                 {% for resident in residents %}
                     <tr>
-                        <td><a href="/resident/view/{{resident._id}}">{{resident.lastName}}</a></td>
+                        <td><a href="/resident/personal/{{resident._id}}">{{resident.lastName}}</a></td>
                         <td>{{resident.firstName}} {{resident.middleName|first}}</td>
                         <td>{{resident.birthDate|age}}</td>
                         <td>{{resident.address}}</td>

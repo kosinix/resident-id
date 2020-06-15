@@ -1,0 +1,16 @@
+<div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {{urlPath|active_class([r/^\/resident\/personal\/(.)+/])}}" href="/resident/personal/{{person._id}}">Personal Info</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{urlPath|active_class([r/^\/resident\/address\/(.)+/])}}" href="/resident/address/{{person._id}}">Address</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{urlPath|active_class([r/^\/resident\/income\/(.)+/])}}" href="/resident/income/{{person._id}}">Source of Income</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{urlPath|active_class([r/^\/resident\/family\/(.)+/])}}" href="/resident/family/{{person._id}}">Family</a>
+        </li>
+    </ul>
+</div>

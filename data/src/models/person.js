@@ -110,6 +110,54 @@ const schema = new Schema({
             }
         }
     ],
+    incomes: [
+        {
+            type: { // employed, remittance, pension, business, others
+                $type: String,
+                trim: true,
+            },
+            employmentSector:{ // public, private
+                $type: String,
+                trim: true,
+            },
+            occupation: {
+                $type: String,
+                trim: true,
+            },
+            employmentStatus: { // Regular, Casual
+                $type: String,
+                trim: true,
+            },
+            estimatedMonthlyIncome: {
+                $type: Number,
+            },
+            estimatedMonthlyHouseholdIncome: {
+                $type: Number,
+            },
+        }
+    ],
+    properties: [
+        {
+            type: { // real, personal
+                $type: String,
+                trim: true,
+            },
+            name: { // residential house and lot, commercial land/bldg., agri-land
+                $type: String, // motorcycle, car, trucks/heavy equip., investments, farm animals/large cattle, others
+                trim: true,
+            },
+        }
+    ],
+    families: [
+        {
+            personId: {
+                $type: mongoose.Schema.Types.ObjectId,
+            },
+            relation: {
+                $type: String
+            }
+        }
+    ],
     documents: [
         {
             type: {
@@ -118,7 +166,30 @@ const schema = new Schema({
                 default: ""
             },
         }
-    ]
+    ],
+    custom: {
+        fourPsBeneficiary: {
+            $type: Boolean
+        },
+        sssPensioner: {
+            $type: Boolean
+        },
+        healthIssue: {
+            $type: Boolean
+        },
+        pwd: {
+            $type: Boolean
+        },
+        ipGroup: {
+            $type: Boolean
+        },
+        emergencyContact: {
+            $type: String
+        },
+        emergencyContactNo: {
+            $type: String
+        }
+    }
 }, {timestamps: true, typeKey: '$type'})
 
 //// Virtuals
@@ -130,6 +201,11 @@ schema.virtual('address').get(function() {
     })
     if(!permanentAddress) {
         return ''
+    }
+
+    // Unit
+    if(permanentAddress.unit) {
+        address.push(permanentAddress.unit)
     }
 
     // Barangay
@@ -154,6 +230,74 @@ schema.virtual('address').get(function() {
     }
 
     return address.join(', ')
+});
+
+schema.virtual('addressRegion').get(function() {
+    let me = this
+    let address = []
+    let permanentAddress = lodash.find(this.addresses, (o) => {
+        return o._id.toString() === me.addressPermanent.toString()
+    })
+    if(!permanentAddress) {
+        return ''
+    }
+
+    return permanentAddress.region
+});
+
+schema.virtual('addressProvince').get(function() {
+    let me = this
+    let address = []
+    let permanentAddress = lodash.find(this.addresses, (o) => {
+        return o._id.toString() === me.addressPermanent.toString()
+    })
+    if(!permanentAddress) {
+        return ''
+    }
+
+    return permanentAddress.province
+});
+
+schema.virtual('addressCityMun').get(function() {
+    let me = this
+    let address = []
+    let permanentAddress = lodash.find(this.addresses, (o) => {
+        return o._id.toString() === me.addressPermanent.toString()
+    })
+    if(!permanentAddress) {
+        return ''
+    }
+
+    // City/Mun
+    return permanentAddress.cityMun
+});
+
+schema.virtual('addressBrgyDistrict').get(function() {
+    let me = this
+    let address = []
+    let permanentAddress = lodash.find(this.addresses, (o) => {
+        return o._id.toString() === me.addressPermanent.toString()
+    })
+    if(!permanentAddress) {
+        return ''
+    }
+
+    // Barangay
+    return permanentAddress.brgyDistrict
+});
+
+schema.virtual('addressUnit').get(function() {
+    let me = this
+    let address = []
+    let permanentAddress = lodash.find(this.addresses, (o) => {
+        return o._id.toString() === me.addressPermanent.toString()
+    })
+    if(!permanentAddress) {
+        return ''
+    }
+
+    // Unit
+    return permanentAddress.unit
 });
 
 //// Schema methods
