@@ -6,6 +6,7 @@ const lodash = require('lodash');
 
 //// Modules
 const db = require('./db');
+const uploader = require('./uploader');
 
 let allowIp = async (req, res, next) => {
     try {

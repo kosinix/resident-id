@@ -28,7 +28,7 @@ env.addFilter('s3_url', function (value, sizePrefix = "") {
     if (sizePrefix) {
         sizePrefix += "-";
     }
-    return CONFIG.aws.s3Url + sizePrefix + value;
+    return `/file-getter/${CONFIG.aws.bucket1.name}/${CONFIG.aws.bucket1.prefix}/${sizePrefix}${value}`
 })
 
 //// Export

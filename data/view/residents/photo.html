@@ -11,7 +11,10 @@
         </div>
     </div>
     <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/photo/{{person._id}}" method="POST" enctype="multipart/form-data" class="form-default">
-        <h3>Personal Info</h3>
+        {% if person.profilePhoto %}
+        <img src="{{person.profilePhoto|s3_url('medium')}}" alt="">
+        {% endif %}
+        
         {% set name = 'photo' %}
         {% include 'parts/form-group-file.html' %}
 
@@ -33,25 +36,11 @@
         mixins: [
             window.vuelidate.validationMixin,
             window.vuelidateExtendMixin,
-            window.VuePhAddress.mixin,
-            window.VuePhAddress.mixinRegions,
-            window.VuePhAddress.mixinPresentAddress,
-            window.VuePhAddress.mixinPermanentAddress,
         ],
         data: {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            suffix: '',
-            gender: 'male',
-            birthDate: '',
-            region1: '06',
-            province1: '0679',
-            cityMun1: '067901',
-            addressSame: false
+            photo: '',
         },
         validations: {
-
         },
         methods: {
             onSubmit: function(){

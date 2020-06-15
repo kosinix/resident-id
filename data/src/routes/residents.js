@@ -12,7 +12,6 @@ const moment = require('moment')
 //// Modules
 const db = require('../db');
 const middlewares = require('../middlewares');
-const s3 = require('../aws-s3');
 
 // Router
 let router = express.Router()
@@ -98,14 +97,14 @@ router.get('/resident/photo/:personId', middlewares.getPerson, async (req, res, 
     }
 });
 
-router.post('/resident/photo/:personId', middlewares.getPerson, async (req, res, next) => {
+router.post('/resident/photo/:personId', middlewares.getPerson, fileUpload(), middlewares.handleExpressUploadMagic, async (req, res, next) => {
     try {
         let person = res.person
 
-        console.log(req.files)
-        res.render('residents/photo.html', {
-            person: person
-        });
+        person.profilePhoto = lodash.get(req, 'saveList.photo[0]')
+        await person.save()
+
+        res.redirect(`/resident/photo/${person._id}`);
     } catch (err) {
         next(err);
     }

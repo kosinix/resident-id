@@ -19,21 +19,19 @@
             <table class="table table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Last Name</th>
                         <th>First Name</th>
+                        <th>Age</th>
                         <th>Address</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for resident in residents %}
                     <tr>
-                        <td><a href="/resident/view/{{resident._id}}">{{resident.uid}}</a></td>
-                        <td>{{resident.lastName}}</td>
-                        <td>{{resident.firstName}}</td>
+                        <td><a href="/resident/view/{{resident._id}}">{{resident.lastName}}</a></td>
+                        <td>{{resident.firstName}} {{resident.middleName|first}}</td>
+                        <td>{{resident.birthDate|age}}</td>
                         <td>{{resident.address}}</td>
-                        <td></td>
                     </tr>
                 {% endfor %}
                 </tbody>

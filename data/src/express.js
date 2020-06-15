@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const lodash = require('lodash');
 
 //// Modules
-const authMan = require('./auth-man');
 const db = require('./db');
 const errors = require('./errors');
 const logger = require('./logger');

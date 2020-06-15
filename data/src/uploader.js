@@ -12,9 +12,8 @@ const sharp = require('sharp');
 const exifReader = require('exif-reader');
 
 //// Modules
-const sanitizer = include('src/sanitizer');
-const logger = include('data/src/logger')
-const s3 = include('src/awsS3')
+const logger = require('./logger')
+const s3 = require('./aws-s3')
 
 const localPrefix = '__incomplete-' // Uploaded file prefix
 const _imageSizes = [
@@ -30,9 +29,12 @@ const _imageSizes = [
             // returns Promise
             return sharp(srcFile)
                 .rotate() // Auto rotate based on device orientation
-                .resize(30, 30)
-                .max()
-                .background({ r: 255, g: 255, b: 255, alpha: 1 })
+                .resize({
+                    width: 30,
+                    height: 30,
+                    fit: 'inside',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .flatten()
                 .jpeg()
                 .toFile(destFile);
@@ -50,10 +52,13 @@ const _imageSizes = [
             sharp.cache(false); // Disable unlink error due files not released
             // returns Promise
             return sharp(srcFile)
-                .rotate()
-                .resize(120, 120)
-                .max()
-                .background({ r: 255, g: 255, b: 255, alpha: 1 })
+                .rotate() // Auto rotate based on device orientation
+                .resize({
+                    width: 120,
+                    height: 120,
+                    fit: 'inside',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .flatten()
                 .jpeg()
                 .toFile(destFile);
@@ -71,10 +76,13 @@ const _imageSizes = [
             sharp.cache(false); // Disable unlink error due files not released
             // returns Promise
             return sharp(srcFile)
-                .rotate()
-                .resize(200, 200)
-                .max()
-                .background({ r: 255, g: 255, b: 255, alpha: 1 })
+                .rotate() // Auto rotate based on device orientation
+                .resize({
+                    width: 200,
+                    height: 200,
+                    fit: 'inside',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .flatten()
                 .jpeg()
                 .toFile(destFile);
@@ -92,10 +100,13 @@ const _imageSizes = [
             sharp.cache(false) // Disable unlink error due files not released
             // returns Promise
             return sharp(srcFile)
-                .rotate()
-                .resize(1000, 1000)
-                .max()
-                .background({ r: 255, g: 255, b: 255, alpha: 1 })
+                .rotate() // Auto rotate based on device orientation
+                .resize({
+                    width: 1000,
+                    height: 1000,
+                    fit: 'inside',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .flatten()
                 .jpeg()
                 .toFile(destFile);
@@ -124,10 +135,13 @@ const _imageSizes = [
                 newHeight = metaData.height
             }
             return image.withMetadata()
-                .rotate()
-                .resize(newWidth, newHeight)
-                .max()
-                .background({ r: 255, g: 255, b: 255, alpha: 1 })
+                .rotate() // Auto rotate based on device orientation
+                .resize({
+                    width: newWidth,
+                    height: newHeight,
+                    fit: 'inside',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .flatten()
                 .jpeg()
                 .toFile(destFile);
@@ -137,9 +151,9 @@ const _imageSizes = [
 ]
 
 /**
- * Move files into upload dir and rename it 
- * 
- * @param {Object} files An object containing files from express-upload req.files. 
+ * Move files into upload dir and rename it
+ *
+ * @param {Object} files An object containing files from express-upload req.files.
  * Eg. format:
  * { 
  *   profilePicFiles: [
@@ -155,12 +169,11 @@ const _imageSizes = [
  *   ],
  *   ...
  * }
- * 
+ *
  * @param {String} uploadDir Absolute path to upload directory
- * @param {Array} allowedFields List of allowed form field names
  * @param {Array} allowedMimes List of allowed mime types for uploaded files
- * 
- * @returns {Promise} Containing array of files uploaded. 
+ * @param fxFileName
+ * @returns {Promise} Containing array of files uploaded.
  */
 let handleExpressUploadLocalAsync = async (files, uploadDir, allowedMimes = ["image/jpeg", "image/png", "application/pdf"], fxFileName = null) => {
     if (!files) {
@@ -179,6 +192,7 @@ let handleExpressUploadLocalAsync = async (files, uploadDir, allowedMimes = ["im
     if (!fxFileName) {
         /**
          * @param {Object} file A single object of express upload req.files
+         * @param prefix
          */
         fxFileName = (file, prefix = '') => {
             // Eg. format: '__incomplete-6899f496c5fef1f35bb110e3997a2f07.jpeg'
@@ -234,16 +248,16 @@ let handleExpressUploadLocalAsync = async (files, uploadDir, allowedMimes = ["im
                 mimeType: mimeType,
                 exifData: exifData,
             });
-        };
-    };
+        }
+    }
     return returnedFields;
 }
 
 /**
  * Resize uploaded image to different variants. Ignore non-image files.
- * 
+ *
  * @param {Object} uploadFields Object of uploaded files
-    {
+ {
         "profilePicFiles": [
             {
                 "fieldName": "profilePicFiles",
@@ -276,7 +290,8 @@ let handleExpressUploadLocalAsync = async (files, uploadDir, allowedMimes = ["im
     }
  *
  * @param {Array} imageSizes The image sizes.
- * 
+ *
+ * @param uploadDir
  * @returns {Promise} Promise containing array in the ff format
  * [
  *   {
@@ -287,9 +302,9 @@ let handleExpressUploadLocalAsync = async (files, uploadDir, allowedMimes = ["im
  *   },
  *   ...
  * ]
- * 
  *
- * 
+ *
+ *
  */
 let resizeImagesAsync = async (uploadFields, imageSizes, uploadDir) => {
     try {
@@ -397,7 +412,6 @@ let generateUploadList = (imageVariants, uploadFields) => {
 /**
  * Generate array of key and filePath pairs for upload
  * 
- * @param {Object} files An object of filePathsExp
  */
 let generateSaveList = (imageVariants, uploadFields) => {
     let saveList = {};
@@ -430,7 +444,6 @@ let uploadToS3Async = async (forUploads) => {
                 s3.upload({
                     Key: CONFIG.aws.bucket1.prefix + '/' + forUpload.key,
                     Bucket: CONFIG.aws.bucket1.name,
-                    ACL: "public-read",
                     Body: fs.createReadStream(forUpload.filePath)
                 }).promise()
             );

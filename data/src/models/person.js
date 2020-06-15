@@ -45,7 +45,7 @@ const schema = new Schema({
     civilStatus: {
         $type: String
     },
-    profilePic: {
+    profilePhoto: {
         $type: String,
         trim: true,
     },

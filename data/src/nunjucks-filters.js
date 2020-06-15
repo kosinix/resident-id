@@ -42,7 +42,14 @@ const extended = (env)=>{
     })
 
     /**
-     * Safer capitalize.
+     * Camel-case.
+     */
+    env.addFilter('camel_case', (value) => {
+        return lodash.camelCase(value);
+    });
+
+    /**
+     * Capitalize string.
      */
     env.addFilter('capitalize', (value) => {
         return lodash.capitalize(value);

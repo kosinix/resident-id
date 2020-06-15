@@ -1,13 +1,8 @@
 //// Core modules
-const fs = require('fs')
 
 //// External modules
 const express = require('express')
-const fileUpload = require('express-fileupload')
-const flash = require('kisapmata')
-const FormData = require('form-data')
 const lodash = require('lodash')
-const moment = require('moment')
 
 //// Modules
 const middlewares = require('../middlewares');
@@ -27,7 +22,7 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
 });
 
 // View s3 object using html page
-router.get('/file-viewer/:bucket/:prefix/:key', async (req, res, next) => {
+router.get('/file-viewer/:bucket/:prefix/:key', middlewares.requireAuthUser, async (req, res, next) => {
     try {
         let bucket = lodash.get(req, "params.bucket", "");
         let prefix = lodash.get(req, "params.prefix", "");
@@ -47,7 +42,7 @@ router.get('/file-viewer/:bucket/:prefix/:key', async (req, res, next) => {
 });
 
 // Get s3 object content
-router.get('/file-getter/:bucket/:prefix/:key', async (req, res, next) => {
+router.get('/file-getter/:bucket/:prefix/:key', middlewares.requireAuthUser, async (req, res, next) => {
     try {
         let bucket = lodash.get(req, "params.bucket", "");
         let prefix = lodash.get(req, "params.prefix", "");
@@ -55,7 +50,7 @@ router.get('/file-getter/:bucket/:prefix/:key', async (req, res, next) => {
 
         let url = s3.getSignedUrl('getObject', {
             Bucket: bucket,
-            Key: prefix + '/' + key
+            Key: prefix + '/' + key,
         })
 
         res.redirect(url);

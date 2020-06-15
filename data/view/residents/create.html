@@ -32,6 +32,10 @@
         {% set options = [{value:'', text:''}, {value:'M', text:'Male'}, {value:'F', text:'Female'}, {value:'O', text:'Other'}] %}
         {% include 'parts/form-group-select.html' %}
 
+        {% set name = 'civilStatus' %}
+        {% set options = [{value:'', text:''}, {value:'Single', text:'Single'}, {value:'Married', text:'Married'}, {value:'Separated', text:'Separated'}, {value:'Widowed', text:'Widowed'}] %}
+        {% include 'parts/form-group-select.html' %}
+
         {% include 'parts/permanent-address.html' %}
         <div class="form-group mb-4">
             <label class="mr-2" for="addressSame">Is Present Address The Same With Permanent Address?</label>
@@ -72,7 +76,8 @@
             middleName: '',
             lastName: '',
             suffix: '',
-            gender: 'male',
+            gender: 'M',
+            civilStatus: 'Single',
             birthDate: '',
             region1: '06',
             province1: '0679',
@@ -90,6 +95,9 @@
                 required: window.validators.required
             },
             gender: {
+                required: window.validators.required
+            },
+            civilStatus: {
                 required: window.validators.required
             },
             birthDate: {
