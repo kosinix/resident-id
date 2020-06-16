@@ -220,6 +220,39 @@ router.post('/resident/income/:personId', middlewares.getPerson, async (req, res
     }
 });
 
+router.get('/resident/passes/:personId', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        res.render('resident/passes.html', {
+            flash: flash.get(req, 'resident'),
+            person: person,
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/resident/passes/:personId', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        let body = req.body
+        let passes = lodash.get(person, 'passes', [])
+
+        let pass = {
+            type: body.type,
+            createdAt: moment().toDate(),
+            expiredAt: moment().add(1, 'days').toDate(),
+        }
+        passes.push(pass)
+        person.passes = passes
+        await person.save()
+        flash.ok(req, 'resident', `Issued pass.`)
+        res.redirect(`/resident/passes/${person._id}`)
+    } catch (err) {
+        next(err);
+    }
+});
+
+
 router.get('/resident/photo/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
