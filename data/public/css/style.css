@@ -179,3 +179,13 @@ h4, h5, h6 {
     border: 1px solid #dee2e6;
     margin-top: -1px;
 }
+
+/* ID Card */
+.id-card {
+    background: #fff;
+    box-shadow: 0 0 3px #ccc;
+}
+.id-card svg{
+    width: 200px !important;
+    height: 200px !important;
+}

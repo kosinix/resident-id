@@ -21,6 +21,15 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
     }
 });
 
+router.get('/check', middlewares.requireAuthUser, async (req, res, next) => {
+    try {
+
+        res.render('check.html');
+    } catch (err) {
+        next(err);
+    }
+});
+
 // View s3 object using html page
 router.get('/file-viewer/:bucket/:prefix/:key', middlewares.requireAuthUser, async (req, res, next) => {
     try {

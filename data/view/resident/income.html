@@ -1,0 +1,80 @@
+{% extends "document.html" %}
+
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    {% include 'parts/flash.html' %}
+    {% include 'parts/resident-header.html' %}
+    {% include 'parts/resident-profile-photo.html' %}
+    {% include 'parts/resident-tabs.html' %}
+
+    <div class="tab-content pt-3 pb-2 pl-3 pr-2">
+        <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/personal/{{person._id}}" method="POST" class="form-default">
+            <h3>Sources of Income</h3>
+            <div class="pt-2 pb-2">
+                <a href="/income/add" class="btn btn-primary mb-1">Add Employment Info</a>
+                <a href="/income/add" class="btn btn-primary mb-1">Add Business</a>
+                <a href="/income/add" class="btn btn-primary mb-1">Add Pension</a>
+                <a href="/income/add" class="btn btn-primary mb-1">Add Remittance</a>
+                <a href="/income/add" class="btn btn-primary mb-1">Others</a>
+            </div>
+        </form>
+    </div>
+
+</main>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vuelidate.validationMixin,
+            window.vuelidateExtendMixin,
+        ],
+        data: {
+            firstName: '{{person.firstName}}',
+            middleName: '{{person.middleName}}',
+            lastName: '{{person.lastName}}',
+            suffix: '{{person.suffix}}',
+            gender: '{{person.gender|default(true, "M")}}',
+            birthDate: '{{person.birthDate|format_date("YYYY-MM-DD")}}',
+            civilStatus: '{{person.civilStatus|default(true, "S")}}',
+        },
+        validations: {
+            firstName: {
+                required: window.validators.required
+            },
+            middleName: {
+                required: window.validators.required
+            },
+            lastName: {
+                required: window.validators.required
+            },
+            gender: {
+                required: window.validators.required
+            },
+            birthDate: {
+                required: window.validators.required
+            },
+            civilStatus: {
+                required: window.validators.required
+            },
+        },
+        methods: {
+            onSubmit: function(){
+                var me = this;
+                me.$v.$touch()
+                if (me.$v.$error) {
+                    alert('Please correct the errors to continue.')
+                } else {
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+

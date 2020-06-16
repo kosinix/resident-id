@@ -8,6 +8,7 @@ const flash = require('kisapmata')
 const phAddress = require('ph-address')
 const lodash = require('lodash')
 const moment = require('moment')
+const qr = require('qr-image')
 
 //// Modules
 const db = require('../db');
@@ -166,6 +167,59 @@ router.post('/resident/address/:personId', middlewares.getPerson, async (req, re
     }
 });
 
+router.get('/resident/income/:personId', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        let regions = lodash.map(phAddress.regions, (o) => {
+            return {
+                value: o.regCode,
+                text: o.regDesc,
+            }
+        })
+        res.render('resident/income.html', {
+            flash: flash.get(req, 'resident'),
+            person: person,
+            regions: regions,
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/resident/income/:personId', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        let body = req.body
+        let patch = {}
+
+        lodash.set(patch, 'addresses.0._id', db.mongoose.Types.ObjectId())
+        lodash.set(patch, 'addresses.0.unit', lodash.get(body, 'unit1'))
+        lodash.set(patch, 'addresses.0.brgyDistrict', lodash.get(body, 'brgyDistrict1'))
+        lodash.set(patch, 'addresses.0.cityMun', lodash.get(body, 'cityMun1'))
+        lodash.set(patch, 'addresses.0.province', lodash.get(body, 'province1'))
+        lodash.set(patch, 'addresses.0.region', lodash.get(body, 'region1'))
+        // lodash.set(patch, 'addresses.1._id', db.mongoose.Types.ObjectId())
+        // lodash.set(patch, 'addresses.1.unit', lodash.get(body, 'unit2'))
+        // lodash.set(patch, 'addresses.1.brgyDistrict', lodash.get(body, 'brgyDistrict2'))
+        // lodash.set(patch, 'addresses.1.cityMun', lodash.get(body, 'cityMun2'))
+        // lodash.set(patch, 'addresses.1.province', lodash.get(body, 'province2'))
+        // lodash.set(patch, 'addresses.1.region', lodash.get(body, 'region2'))
+        lodash.set(patch, 'addressPermanent', lodash.get(patch, 'addresses.0._id'))
+        // lodash.set(patch, 'addressPresent', lodash.get(patch, 'addresses.1._id'))
+        // if(body.addressSame === 'true'){
+        //     patch.addresses.splice(1,1) // Remove second array
+        //     lodash.set(patch, 'addressPresent', lodash.get(patch, 'addresses.0._id'))
+        // }
+
+
+        lodash.merge(person, patch)
+        await person.save()
+        flash.ok(req, 'resident', `Updated ${person.firstName} ${person.lastName} address.`)
+        res.redirect(`/resident/income/${person._id}`)
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/resident/photo/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
@@ -191,12 +245,40 @@ router.post('/resident/photo/:personId', middlewares.getPerson, fileUpload(), mi
 });
 
 
+router.get('/resident/id-card/:personId', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        let qrCodeSvg = qr.imageSync(person.uid, { size: 3, type: 'svg' })
+        res.render('resident/id-card.html', {
+            person: person,
+            qrCodeSvg: qrCodeSvg,
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/resident/find', async (req, res, next) => {
+    try {
+        let code = req.query.code
+        let person = await db.main.Person.findOne({
+            uid: code
+        })
+        if(!person){
+            throw new Error('Not found')
+        }
+        res.redirect(`/resident/personal/${person._id}`)
+    } catch (err) {
+        next(err);
+    }
+});
+
+
 router.get('/resident/delete/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let personPlain = person.toObject()
 
-        let photo = personPlain.profilePhoto
 
         // Delete files on AWS S3
         const bucketName = CONFIG.aws.bucket1.name
@@ -204,22 +286,25 @@ router.get('/resident/delete/:personId', middlewares.getPerson, async (req, res,
 
         let promises = []
 
-        let promise = s3.deleteObjects({
-            Bucket: bucketName,
-            Delete: {
-                Objects: [
-                    { Key: `${bucketKeyPrefix}${photo}` },
-                    { Key: `${bucketKeyPrefix}tiny-${photo}` },
-                    { Key: `${bucketKeyPrefix}small-${photo}` },
-                    { Key: `${bucketKeyPrefix}medium-${photo}` },
-                    { Key: `${bucketKeyPrefix}large-${photo}` },
-                    { Key: `${bucketKeyPrefix}xlarge-${photo}` },
-                    { Key: `${bucketKeyPrefix}orig-${photo}` },
-                ]
-            }
-        }).promise()
+        let photo = personPlain.profilePhoto
+        if(photo) {
+            let promise = s3.deleteObjects({
+                Bucket: bucketName,
+                Delete: {
+                    Objects: [
+                        {Key: `${bucketKeyPrefix}${photo}`},
+                        {Key: `${bucketKeyPrefix}tiny-${photo}`},
+                        {Key: `${bucketKeyPrefix}small-${photo}`},
+                        {Key: `${bucketKeyPrefix}medium-${photo}`},
+                        {Key: `${bucketKeyPrefix}large-${photo}`},
+                        {Key: `${bucketKeyPrefix}xlarge-${photo}`},
+                        {Key: `${bucketKeyPrefix}orig-${photo}`},
+                    ]
+                }
+            }).promise()
 
-        promises.push(promise)
+            promises.push(promise)
+        }
 
         // Requirements
         lodash.each(personPlain.documents, (document) => {
