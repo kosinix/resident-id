@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const lodash = require('lodash');
 const phAddress = require('ph-address')
+const uuid = require('uuid');
 
 //// Modules
 const passwordMan = require('../password-man')
@@ -158,6 +159,20 @@ const schema = new Schema({
             }
         }
     ],
+    passes: [
+        {
+            type: {
+                $type: String,
+                trim: true,
+            },
+            createdAt: {
+                $type: Date
+            },
+            expiredAt: {
+                $type: Date
+            }
+        }
+    ],
     documents: [
         {
             type: {
@@ -303,7 +318,7 @@ schema.virtual('addressUnit').get(function() {
 //// Schema methods
 schema.pre('save', function (next) {
     if(!this.uid){
-        this.uid = passwordMan.randomString(8)
+        this.uid = uuid.v4()
     }
     next();
 });
