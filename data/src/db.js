@@ -22,6 +22,7 @@ main.on('disconnected', () => {
 });
 
 main.Login = main.model('Login', require('./models/login'));
+main.Pass = main.model('Pass', require('./models/pass'));
 main.Person = main.model('Person', require('./models/person'), 'people');
 main.User = main.model('User', require('./models/user'));
 

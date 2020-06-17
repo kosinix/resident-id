@@ -1,0 +1,49 @@
+<script>
+    var vModalEmployment = new Vue({
+        el: '#modal-employment',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vuelidate.validationMixin,
+            window.vuelidateExtendMixin,
+        ],
+        components: {
+        },
+        data: {
+            disabled: false,
+            formUrl: "/resident/income/{{person._id}}/employment/add",
+            // fields
+            employmentSector: "",
+            occupation: "",
+            employmentStatus: "",
+            estimatedMonthlyIncome: "",
+        },
+        validations: {
+            employmentSector: {
+                required: window.validators.required,
+            },
+            occupation: {
+                required: window.validators.required,
+            },
+            employmentStatus: {
+                required: window.validators.required,
+            },
+            estimatedMonthlyIncome: {
+                required: window.validators.required,
+            },
+        },
+        methods: {
+            onSubmit: function () {
+                var me = this;
+                me.$v.$touch()
+                if (me.$v.$error) {
+                    alert("Please correct the errors to continue...")
+                } else {
+                    me.$nextTick(function() {
+                        me.disabled = true;
+                        me.$refs.form.submit()
+                    });
+                }
+            },
+        }
+    });
+</script>

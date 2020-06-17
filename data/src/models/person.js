@@ -159,20 +159,6 @@ const schema = new Schema({
             }
         }
     ],
-    passes: [
-        {
-            type: {
-                $type: String,
-                trim: true,
-            },
-            createdAt: {
-                $type: Date
-            },
-            expiredAt: {
-                $type: Date
-            }
-        }
-    ],
     documents: [
         {
             type: {

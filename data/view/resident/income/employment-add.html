@@ -8,9 +8,13 @@
     {% include 'parts/resident-tabs.html' %}
 
     <div class="tab-content pt-3 pb-2 pl-3 pr-2">
-        <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/address/{{person._id}}" method="POST" class="form-default">
+        <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/address/{{person._id}}/employment/add" method="POST" class="form-default">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h3>Add Employment </h3>
+                <a href="/resident/income/{{person._id}}" class="btn">Back</a>
+            </div>
 
-            {% include 'parts/permanent-address.html' %}
+
 
             <div class="form-row pt-3 pb-3">
                 <div class="col-md-12">
@@ -24,7 +28,6 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-<script src="{{app.url}}/js/vue-ph-address.js"></script>
 <script>
     var vApp = new Vue({
         el: '#vApp',
@@ -32,26 +35,33 @@
         mixins: [
             window.vuelidate.validationMixin,
             window.vuelidateExtendMixin,
-            window.VuePhAddress.mixin,
-            window.VuePhAddress.mixinRegions,
-            window.VuePhAddress.mixinPresentAddress,
-            window.VuePhAddress.mixinPermanentAddress,
         ],
         data: {
-            region1: '{{person.addressRegion|default("06", true)}}',
-            province1: '{{person.addressProvince|default("0679", true)}}',
-            cityMun1: '{{person.addressCityMun|default("067901", true)}}',
-            brgyDistrict1: '{{person.addressBrgyDistrict|default("", true)}}',
-            unit1: '{{person.addressUnit|default("", true)}}',
+            firstName: '{{person.firstName}}',
+            middleName: '{{person.middleName}}',
+            lastName: '{{person.lastName}}',
+            suffix: '{{person.suffix}}',
+            gender: '{{person.gender|default(true, "M")}}',
+            birthDate: '{{person.birthDate|format_date("YYYY-MM-DD")}}',
+            civilStatus: '{{person.civilStatus|default(true, "S")}}',
         },
         validations: {
-            region1: {
+            firstName: {
                 required: window.validators.required
             },
-            cityMun1: {
+            middleName: {
                 required: window.validators.required
             },
-            brgyDistrict1: {
+            lastName: {
+                required: window.validators.required
+            },
+            gender: {
+                required: window.validators.required
+            },
+            birthDate: {
+                required: window.validators.required
+            },
+            civilStatus: {
                 required: window.validators.required
             },
         },

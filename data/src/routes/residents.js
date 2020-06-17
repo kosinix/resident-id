@@ -220,6 +220,30 @@ router.post('/resident/income/:personId', middlewares.getPerson, async (req, res
     }
 });
 
+router.post('/resident/income/:personId/employment/add', middlewares.getPerson, async (req, res, next) => {
+    try {
+        let person = res.person
+        let body = req.body
+        let incomes = lodash.get(person, 'incomes', [])
+
+        let income = {
+            type: 'employed',
+            employmentSector: body.employmentSector,
+            occupation: body.occupation,
+            employmentStatus: body.employmentStatus,
+            estimatedMonthlyIncome: body.estimatedMonthlyIncome
+        }
+        incomes.push(income)
+        person.incomes = incomes
+        await person.save()
+        flash.ok(req, 'resident', `Income added.`)
+        res.redirect(`/resident/income/${person._id}`)
+
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/resident/passes/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
