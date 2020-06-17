@@ -113,6 +113,17 @@ body, pre {
 
 
 /* Bootstrap Overrides */
+.sidebar-blue {
+    background: #031b4d;
+}
+.sidebar-blue .nav-link {
+    color: #9fbeff;
+}
+.sidebar-blue .nav-link.active {
+    color: #00143e;
+    background: #0052ff;
+}
+
 .btn-full-width {
     width: 100%;
 }

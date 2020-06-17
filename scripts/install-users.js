@@ -1,6 +1,6 @@
 /**
- * Clear role collection and insert data from ac-presets
- * Usage: node scripts/install-roles.js
+ * Insert default users.
+ * Usage: node scripts/install-users.js
  */
 //// Core modules
 const path = require('path');

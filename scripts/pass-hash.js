@@ -1,5 +1,5 @@
 /**
- *
+ * Util for hashing a plain text password.
  */
 //// Core modules
 
