@@ -18,30 +18,30 @@ const s3 = require('../aws-s3');
 // Router
 let router = express.Router()
 
-router.use('/resident', middlewares.requireAuthUser )
+router.use('/admin', middlewares.requireAuthUser)
+router.use('/admin', middlewares.guardRoute(['read_all_admin', 'create_admin', 'read_admin', 'update_admin', 'delete_admin']))
 
-router.get('/resident/all', middlewares.guardRoute(['read_all_resident', 'read_resident']), async (req, res, next) => {
+router.get('/admin/all', async (req, res, next) => {
     try {
-        let residents = await db.main.Person.find()
-        res.render('resident/all.html', {
-            flash: flash.get(req, 'resident'),
-            residents: residents
+        let admins = await db.main.User.find()
+        res.render('admin/all.html', {
+            flash: flash.get(req, 'admin'),
+            admins: admins
         });
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/resident/create', middlewares.guardRoute(['create_resident']), async (req, res, next) => {
+router.get('/admin/create', async (req, res, next) => {
     try {
 
-        res.render('resident/create.html', {
-        });
+        res.render('admin/create.html', {});
     } catch (err) {
         next(err);
     }
 });
-router.post('/resident/create', middlewares.guardRoute(['create_resident']), async (req, res, next) => {
+router.post('/admin/create', async (req, res, next) => {
     try {
         let body = req.body
         let patch = {}
@@ -74,26 +74,26 @@ router.post('/resident/create', middlewares.guardRoute(['create_resident']), asy
 
         let person = new db.main.Person(patch)
         await person.save()
-        flash.ok(req, 'resident', `Added ${person.firstName} ${person.lastName}.`)
-        res.redirect(`/resident/address/${person._id}`)
+        flash.ok(req, 'admin', `Added ${person.firstName} ${person.lastName}.`)
+        res.redirect(`/admin/address/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/resident/personal/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/personal/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
 
-        res.render('resident/personal.html', {
-            flash: flash.get(req, 'resident'),
+        res.render('admin/personal.html', {
+            flash: flash.get(req, 'admin'),
             person: person,
         });
     } catch (err) {
         next(err);
     }
 });
-router.post('/resident/personal/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.post('/admin/personal/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let body = req.body
@@ -108,14 +108,14 @@ router.post('/resident/personal/:personId', middlewares.guardRoute(['create_resi
 
         lodash.merge(person, patch)
         await person.save()
-        flash.ok(req, 'resident', `Updated ${person.firstName} ${person.lastName} personal info.`)
-        res.redirect(`/resident/address/${person._id}`)
+        flash.ok(req, 'admin', `Updated ${person.firstName} ${person.lastName} personal info.`)
+        res.redirect(`/admin/address/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/resident/address/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/address/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let regions = lodash.map(phAddress.regions, (o) => {
@@ -124,8 +124,8 @@ router.get('/resident/address/:personId', middlewares.guardRoute(['create_reside
                 text: o.regDesc,
             }
         })
-        res.render('resident/address.html', {
-            flash: flash.get(req, 'resident'),
+        res.render('admin/address.html', {
+            flash: flash.get(req, 'admin'),
             person: person,
             regions: regions,
         });
@@ -133,7 +133,7 @@ router.get('/resident/address/:personId', middlewares.guardRoute(['create_reside
         next(err);
     }
 });
-router.post('/resident/address/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.post('/admin/address/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let body = req.body
@@ -161,14 +161,14 @@ router.post('/resident/address/:personId', middlewares.guardRoute(['create_resid
 
         lodash.merge(person, patch)
         await person.save()
-        flash.ok(req, 'resident', `Updated ${person.firstName} ${person.lastName} address.`)
-        res.redirect(`/resident/income/${person._id}`)
+        flash.ok(req, 'admin', `Updated ${person.firstName} ${person.lastName} address.`)
+        res.redirect(`/admin/income/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/resident/income/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/income/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let regions = lodash.map(phAddress.regions, (o) => {
@@ -177,8 +177,8 @@ router.get('/resident/income/:personId', middlewares.guardRoute(['create_residen
                 text: o.regDesc,
             }
         })
-        res.render('resident/income.html', {
-            flash: flash.get(req, 'resident'),
+        res.render('admin/income.html', {
+            flash: flash.get(req, 'admin'),
             person: person,
             regions: regions,
         });
@@ -186,7 +186,7 @@ router.get('/resident/income/:personId', middlewares.guardRoute(['create_residen
         next(err);
     }
 });
-router.post('/resident/income/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.post('/admin/income/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let body = req.body
@@ -214,14 +214,14 @@ router.post('/resident/income/:personId', middlewares.guardRoute(['create_reside
 
         lodash.merge(person, patch)
         await person.save()
-        flash.ok(req, 'resident', `Updated ${person.firstName} ${person.lastName} address.`)
-        res.redirect(`/resident/income/${person._id}`)
+        flash.ok(req, 'admin', `Updated ${person.firstName} ${person.lastName} address.`)
+        res.redirect(`/admin/income/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/resident/income/:personId/employment/add', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.post('/admin/income/:personId/employment/add', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let body = req.body
@@ -237,26 +237,26 @@ router.post('/resident/income/:personId/employment/add', middlewares.guardRoute(
         incomes.push(income)
         person.incomes = incomes
         await person.save()
-        flash.ok(req, 'resident', `Income added.`)
-        res.redirect(`/resident/income/${person._id}`)
+        flash.ok(req, 'admin', `Income added.`)
+        res.redirect(`/admin/income/${person._id}`)
 
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/resident/passes/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/passes/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
-        res.render('resident/passes.html', {
-            flash: flash.get(req, 'resident'),
+        res.render('admin/passes.html', {
+            flash: flash.get(req, 'admin'),
             person: person,
         });
     } catch (err) {
         next(err);
     }
 });
-router.post('/resident/passes/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.post('/admin/passes/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let body = req.body
@@ -270,44 +270,44 @@ router.post('/resident/passes/:personId', middlewares.guardRoute(['create_reside
         passes.push(pass)
         person.passes = passes
         await person.save()
-        flash.ok(req, 'resident', `Issued pass.`)
-        res.redirect(`/resident/passes/${person._id}`)
+        flash.ok(req, 'admin', `Issued pass.`)
+        res.redirect(`/admin/passes/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
 
-router.get('/resident/photo/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/photo/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
 
-        res.render('resident/photo.html', {
+        res.render('admin/photo.html', {
             person: person
         });
     } catch (err) {
         next(err);
     }
 });
-router.post('/resident/photo/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, fileUpload(), middlewares.handleExpressUploadMagic, async (req, res, next) => {
+router.post('/admin/photo/:personId', middlewares.getPerson, fileUpload(), middlewares.handleExpressUploadMagic, async (req, res, next) => {
     try {
         let person = res.person
 
         person.profilePhoto = lodash.get(req, 'saveList.photo[0]')
         await person.save()
-        flash.ok(req, 'resident', `Updated ${person.firstName} ${person.lastName} photo.`)
-        res.redirect(`/resident/personal/${person._id}`);
+        flash.ok(req, 'admin', `Updated ${person.firstName} ${person.lastName} photo.`)
+        res.redirect(`/admin/personal/${person._id}`);
     } catch (err) {
         next(err);
     }
 });
 
 
-router.get('/resident/id-card/:personId', middlewares.guardRoute(['create_resident', 'update_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/id-card/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
-        let qrCodeSvg = qr.imageSync(person.uid, { size: 3, type: 'svg' })
-        res.render('resident/id-card.html', {
+        let qrCodeSvg = qr.imageSync(person.uid, {size: 3, type: 'svg'})
+        res.render('admin/id-card.html', {
             person: person,
             qrCodeSvg: qrCodeSvg,
         });
@@ -316,23 +316,23 @@ router.get('/resident/id-card/:personId', middlewares.guardRoute(['create_reside
     }
 });
 
-router.get('/resident/find', middlewares.guardRoute(['create_resident', 'update_resident']), async (req, res, next) => {
+router.get('/admin/find', async (req, res, next) => {
     try {
         let code = req.query.code
         let person = await db.main.Person.findOne({
             uid: code
         })
-        if(!person){
+        if (!person) {
             throw new Error('Not found')
         }
-        res.redirect(`/resident/personal/${person._id}`)
+        res.redirect(`/admin/personal/${person._id}`)
     } catch (err) {
         next(err);
     }
 });
 
 
-router.get('/resident/delete/:personId', middlewares.guardRoute(['delete_resident']), middlewares.getPerson, async (req, res, next) => {
+router.get('/admin/delete/:personId', middlewares.getPerson, async (req, res, next) => {
     try {
         let person = res.person
         let personPlain = person.toObject()
@@ -345,7 +345,7 @@ router.get('/resident/delete/:personId', middlewares.guardRoute(['delete_residen
         let promises = []
 
         let photo = personPlain.profilePhoto
-        if(photo) {
+        if (photo) {
             let promise = s3.deleteObjects({
                 Bucket: bucketName,
                 Delete: {
@@ -372,13 +372,13 @@ router.get('/resident/delete/:personId', middlewares.guardRoute(['delete_residen
                     Bucket: bucketName,
                     Delete: {
                         Objects: [
-                            { Key: `${bucketKeyPrefix}${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}tiny-${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}small-${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}medium-${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}large-${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}xlarge-${bucketKey}` },
-                            { Key: `${bucketKeyPrefix}orig-${bucketKey}` },
+                            {Key: `${bucketKeyPrefix}${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}tiny-${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}small-${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}medium-${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}large-${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}xlarge-${bucketKey}`},
+                            {Key: `${bucketKeyPrefix}orig-${bucketKey}`},
                         ]
                     }
                 }).promise()
@@ -391,8 +391,8 @@ router.get('/resident/delete/:personId', middlewares.guardRoute(['delete_residen
 
         await person.remove()
 
-        flash.ok(req, 'resident', `"${personPlain.firstName} ${personPlain.lastName}" deleted.`)
-        res.redirect(`/resident/all`);
+        flash.ok(req, 'admin', `"${personPlain.firstName} ${personPlain.lastName}" deleted.`)
+        res.redirect(`/admin/all`);
     } catch (err) {
         next(err);
     }

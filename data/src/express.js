@@ -63,9 +63,11 @@ app.use(async (req, res, next) => {
         let authUserId = lodash.get(req, 'session.authUserId');
         if (authUserId) {
             let user = await db.main.User.findById(authUserId)
-            user = lodash.pickBy(user.toObject(), (_, key) => {
-                return !['createdAt', 'updatedAt', '__v', 'passwordHash', 'salt'].includes(key) // Remove these props
-            })
+            if(user) {
+                user = lodash.pickBy(user.toObject(), (_, key) => {
+                    return !['createdAt', 'updatedAt', '__v', 'passwordHash', 'salt'].includes(key) // Remove these props
+                })
+            }
             res.locals.user = user
         }
 

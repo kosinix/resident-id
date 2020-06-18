@@ -1,0 +1,74 @@
+{% extends "document.html" %}
+
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    {% include 'parts/flash.html' %}
+    {% include 'parts/resident-header.html' %}
+    {% include 'parts/resident-profile-photo.html' %}
+    {% include 'parts/resident-tabs.html' %}
+
+    <div class="tab-content pt-3 pb-2 pl-3 pr-2">
+        <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/address/{{person._id}}" method="POST" class="form-default">
+
+            {% include 'parts/permanent-address.html' %}
+
+            <div class="form-row pt-3 pb-3">
+                <div class="col-md-12">
+                    <button class="btn btn-primary">Save Address</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</main>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{app.url}}/js/vue-ph-address.js"></script>
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vuelidate.validationMixin,
+            window.vuelidateExtendMixin,
+            window.VuePhAddress.mixin,
+            window.VuePhAddress.mixinRegions,
+            window.VuePhAddress.mixinPresentAddress,
+            window.VuePhAddress.mixinPermanentAddress,
+        ],
+        data: {
+            region1: '{{person.addressRegion|default("06", true)}}',
+            province1: '{{person.addressProvince|default("0679", true)}}',
+            cityMun1: '{{person.addressCityMun|default("067901", true)}}',
+            brgyDistrict1: '{{person.addressBrgyDistrict|default("", true)}}',
+            unit1: '{{person.addressUnit|default("", true)}}',
+        },
+        validations: {
+            region1: {
+                required: window.validators.required
+            },
+            cityMun1: {
+                required: window.validators.required
+            },
+            brgyDistrict1: {
+                required: window.validators.required
+            },
+        },
+        methods: {
+            onSubmit: function(){
+                var me = this;
+                me.$v.$touch()
+                if (me.$v.$error) {
+                    alert('Please correct the errors to continue.')
+                } else {
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+

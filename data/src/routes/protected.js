@@ -21,7 +21,21 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
     }
 });
 
-router.get('/check', middlewares.requireAuthUser, async (req, res, next) => {
+router.use('/check', middlewares.requireAuthUser, middlewares.guardRoute([
+    'read_all_resident',
+    'create_resident',
+    'read_resident',
+    'update_resident',
+    'delete_resident',
+
+    'read_all_pass',
+    'create_pass',
+    'read_pass',
+    'update_pass',
+    'delete_pass',
+]))
+
+router.get('/check', async (req, res, next) => {
     try {
 
         res.render('check.html');

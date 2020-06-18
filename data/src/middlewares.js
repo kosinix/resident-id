@@ -2,6 +2,7 @@
 //// Core modules
 
 //// External modules
+const access = require('acrb');
 const lodash = require('lodash');
 
 //// Modules
@@ -100,6 +101,22 @@ let requireAuthUser = async (req, res, next) => {
 module.exports = {
     allowIp: allowIp,
     antiCsrfCheck: antiCsrfCheck,
+    guardRoute: (permissions) => {
+        return async (req, res, next) => {
+            try {
+                let user = res.user
+                let rolesList = await db.main.Role.find()
+                if (!access.and(user, permissions, rolesList)) {
+                    return res.render('error.html', {
+                        error: `Access denied. Required permissions: ${permissions.join(', ')}.`
+                    })
+                }
+                next()
+            } catch (err) {
+                next(err)
+            }
+        }
+    },
     getPerson: async (req, res, next) => {
         try {
             let personId = req.params.personId || "";

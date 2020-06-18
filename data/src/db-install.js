@@ -21,6 +21,8 @@ main.on('disconnected', () => {
     console.log('Database disconnected from', conf.host + '/' + conf.db);
 });
 
+main.Permission = main.model('Permission', require('./models/permission'));
+main.Role = main.model('Role', require('./models/role'));
 main.User = main.model('User', require('./models/user'));
 
 

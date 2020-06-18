@@ -1,16 +1,15 @@
 /**
- * Insert default users.
- * Usage: node scripts/install-users.js
+ * Clear role collection and insert data.
+ * Usage: node scripts/install-roles.js
  */
 //// Core modules
 const path = require('path');
 
 //// External modules
 const lodash = require('lodash');
-const pigura = require('pigura');
 
 //// Modules
-const passwordMan = require('../data/src/password-man');
+const pigura = require('pigura');
 
 
 //// First things first
@@ -35,36 +34,33 @@ const credLoader = new pigura.ConfigLoader({
 global.CRED = credLoader.getConfig()
 
 const db = require('../data/src/db-install');
-let adminsList = require('./install-data/users-list'); // Do not remove semi-colon
+let rolesList = require('./install-data/roles-list'); // Do not remove semi-colon
 
 
 (async ()=>{
     try {
-        // await db.main.User.deleteMany()
-        let promises = lodash.map(adminsList, (o)=>{
-            let user = new db.main.User({
-                passwordHash: o.passwordHash,
-                salt: o.salt,
-                roles: o.roles,
-                firstName: o.firstName,
-                middleName: o.middleName,
-                lastName: o.lastName,
-                email: o.email,
-                active: o.active,
+
+        console.log('Clearing roles collection...')
+
+        await db.main.Role.deleteMany()
+        let promises = lodash.map(rolesList, (o)=>{
+            let role = new db.main.Role({
+                key: o.key,
+                name: o.name,
+                description: lodash.get(o, 'description', ''),
                 permissions: o.permissions,
             });
-
-            console.log(`Inserting "${o.email}" ...`)
-            return user.save()
+            console.log(`Inserting "${o.key}" ...`)
+            return role.save()
         })
         await Promise.all(promises)
-        console.log(`Inserted ${promises.length} users.`)
+        console.log(`Inserted ${promises.length} roles.`)
 
     } catch (err) {
-        console.log(err)
+        console.log('Rolling back roles collection...')
+        await db.main.Role.deleteMany()
     } finally {
         db.main.close();
     }
 })()
-
 
