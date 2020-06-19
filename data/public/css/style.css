@@ -169,6 +169,20 @@ h4, h5, h6 {
     background: #5b5486;
     color: #fff;
 }
+.sidebar .nav-item ul {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: rgba(0,0,0,.1);
+}
+.sidebar .nav-item .nav-item .nav-link {
+    padding-left: 36px;
+    background: none;
+}
+.sidebar .nav-item .nav-item .nav-link:not(.active) {
+    color: #af9fc7;
+}
+
+
 .toggler {
     border: 1px solid #ccc;
     display: inline-block;
@@ -197,10 +211,12 @@ h4, h5, h6 {
 }
 .main .toggler {
     display: none;
-    border: 0
+    height: 20px;
+    border: 1px solid #584475;
+    background: #584475
 }
 .main .toggler span {
-    background: #444444;
+    background: #fff;
 }
 .hide-menu .main {
     margin: 0;
@@ -212,6 +228,8 @@ h4, h5, h6 {
 .hide-menu .main .toggler {
     display: inline-block;
 }
+
+/* Nav */
 
 /* Breakpoints */
 /* ≥1200px Extra large */
