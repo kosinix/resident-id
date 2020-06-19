@@ -30,51 +30,6 @@ body, pre {
  * Sidebar
  */
 
-.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100; /* Behind the navbar */
-    padding: 48px 0 0; /* Height of navbar */
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-}
-
-@media (max-width: 767.98px) {
-    .sidebar {
-        top: 2rem;
-    }
-}
-
-.sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-}
-
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-    .sidebar-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-    }
-}
-
-.sidebar .nav-link {
-    font-weight: 500;
-    color: #333;
-}
-
-.sidebar .nav-link.active {
-    color: #007bff;
-}
-
-.sidebar-heading {
-    font-size: .75rem;
-    text-transform: uppercase;
-}
 
 /*
  * Navbar
@@ -113,17 +68,6 @@ body, pre {
 
 
 /* Bootstrap Overrides */
-.sidebar-blue {
-    background: #031b4d;
-}
-.sidebar-blue .nav-link {
-    color: #9fbeff;
-}
-.sidebar-blue .nav-link.active {
-    color: #00143e;
-    background: #0052ff;
-}
-
 .btn-full-width {
     width: 100%;
 }
@@ -200,3 +144,99 @@ h4, h5, h6 {
     width: 200px !important;
     height: 200px !important;
 }
+
+.brand h1{
+    font-size: 16px;
+    color: #fefefe;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+.sidebar {
+    background-image: -webkit-gradient(linear,right top, left top,from(rgba(51,148,225,.18)),to(transparent));
+    background-image: linear-gradient(270deg,rgba(51,148,225,.18),transparent);
+    background-color: #584475;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    z-index: 100;
+    width: 270px;
+    transition: all 300ms ease-out;
+}
+.sidebar a{
+    color: #af9fc7;
+}
+.sidebar .nav-link.active {
+    background: #5b5486;
+    color: #fff;
+}
+.toggler {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 2px;
+    border-radius: 3px;
+    background: none;
+}
+.toggler:active{
+    border: 1px solid #ccc;
+}
+.toggler span {
+    display: block;
+    min-width: 16px;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+.toggler span:last-child{
+    margin-bottom: 0;
+}
+.main {
+    margin-left: 270px;
+    transition: all 300ms ease-out;
+}
+.main .toggler {
+    display: none;
+    border: 0
+}
+.main .toggler span {
+    background: #444444;
+}
+.hide-menu .main {
+    margin: 0;
+}
+.hide-menu .sidebar {
+    margin: 0;
+    left: -270px;
+}
+.hide-menu .main .toggler {
+    display: inline-block;
+}
+
+/* Breakpoints */
+/* ≥1200px Extra large */
+@media (max-width:1200px){
+
+}
+/* ≥992px	Large */
+@media (max-width:992px){
+
+}
+/* ≥768px	Medium */
+@media (max-width:768px){
+    .main {
+        margin-left: 0;
+    }
+}
+/* ≥576px	Small */
+@media (max-width:576px){
+
+}
+/* <576px Extra Small */
+@media (min-width:575px){
+
+}
+
+
+
+

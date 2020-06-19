@@ -1,7 +1,7 @@
 {% extends "document.html" %}
 
 {% block body %}
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+<div class="col-md-12">
     {% include 'parts/flash.html' %}
     {% include 'parts/resident-header.html' %}
     {% include 'parts/resident-profile-photo.html' %}
@@ -20,7 +20,7 @@
         </form>
     </div>
 
-</main>
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}

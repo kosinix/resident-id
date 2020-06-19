@@ -5,3 +5,8 @@ Quill.prototype.getHtml = function () {
 
 
 
+jQuery(document).ready(function($){
+    $('.toggler').on('click', function(){
+        $('body').toggleClass('hide-menu')
+    })
+})

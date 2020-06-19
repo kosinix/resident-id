@@ -1,15 +1,11 @@
 {% extends "document.html" %}
 
 {% block body %}
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1>Add Admin User</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-                <a href="/admin/all" class="btn btn-sm btn-outline-primary">Back</a>
-            </div>
-        </div>
-    </div>
+<div class="col-md-12">
+    {% include 'parts/flash.html' %}
+    {% set pageTitle = 'Add Admin User' %}
+    {% include 'parts/header-main.html' %}
+
     <form ref="form" id="vApp" v-cloak v-on:submit.prevent="onSubmit" action="/resident/create" method="POST" class="form-default">
         <h3>Personal Info</h3>
         {% set name = 'firstName' %}
@@ -40,7 +36,7 @@
             </div>
         </div>
     </form>
-</main>
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}

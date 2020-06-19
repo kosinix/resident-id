@@ -7,7 +7,7 @@
             <h1 class="text-center">Login</h1>
             <div id="vApp" v-cloak>
                 {% include 'parts/flash.html' %}
-                <form ref="form" v-on:submit.prevent="onSubmit" action="/login" method="POST" novalidate>
+                <form ref="form" v-on:submit.prevent="onSubmit" action="/admin/login" method="POST" novalidate>
                     <div class="form-group">
                         <input v-model="email" type="email" name="email" class="form-control" value="">
                         <small class="invalid-feedback">${getError('email')}</small>

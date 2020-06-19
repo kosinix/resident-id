@@ -12,7 +12,7 @@ const passwordMan = require('../password-man')
 // Router
 let router = express.Router()
 
-router.get('/login', async (req, res, next) => {
+router.get('/admin/login', async (req, res, next) => {
     try {
         console.log(req.session)
         let ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
@@ -24,7 +24,7 @@ router.get('/login', async (req, res, next) => {
         next(err);
     }
 });
-router.post('/login', async (req, res, next) => {
+router.post('/admin/login', async (req, res, next) => {
     try {
         let post = req.body;
 
